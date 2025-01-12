@@ -11,7 +11,7 @@ from pytube import Search
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)
+# engine.setProperty('voice', voices[0].id)
 
 
 def speak(audio):
@@ -35,10 +35,10 @@ def wishMe():
 
 def takeCommand():
 
-    r = sr.Recognizer()
+    r = sr.Recognizer()  #Creates a new Recognizer instance, which represents a collection of speech recognition functionality.
     with sr.Microphone() as source:
         print("Listening...")
-        r.pause_threshold = 1
+        r.pause_threshold = 1 # means if there is a gap of 1sec in the input audio. The sentence will be called as completed and break the listening 
         audio = r.listen(source)
 
     try:
@@ -55,8 +55,8 @@ def sendEmail(to, content):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
     server.starttls()
-    server.login('sahilakash2264@gmail.com', 'Samsung@m01')
-    server.sendmail('sahilakash22264@gmail.com', to, content)
+    server.login('sarthakk018@gmail.com', 'Samsung@m01')
+    server.sendmail('sarthakk018@gmail.com', to, content)
     server.close()
     
 def getStockPrice(stock_symbol):
