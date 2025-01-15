@@ -5,9 +5,9 @@ import wikipedia
 import webbrowser
 import os
 import smtplib
-import requests
+import requests # This module in Python is a popular library used for making HTTP requests to communicate with web servers. It simplifies sending and receiving data over the internet, such as retrieving data from APIs, submitting forms, or downloading files.
 import yfinance as yfp
-from pytube import Search
+from pytube import Search # pytube module is generally used to download yt videos whereas importing Search class will help in searching for youtube results.
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -31,19 +31,19 @@ def wishMe():
     else:
         speak("Good Evening!")  
 
-    speak("I am obligued Sir. Please tell me how may I help you")       
+    speak("I am obligued Sir, Please tell me how may I help you")       
 
 def takeCommand():
 
     r = sr.Recognizer()  #Creates a new Recognizer instance, which represents a collection of speech recognition functionality.
     with sr.Microphone() as source:
         print("Listening...")
-        r.pause_threshold = 1 # means if there is a gap of 1sec in the input audio. The sentence will be called as completed and break the listening 
-        audio = r.listen(source)
-
+        r.pause_threshold = 1.5 # means if there is a gap of 1.5sec in the input audio. The sentence will be called as completed and break the listening 
+        audio = r.listen(source) # sirf sunta hai
+        
     try:
         print("Recognizing...")    
-        query = r.recognize_google(audio, language='en-us')
+        query = r.recognize_google(audio, language='en-us')  # ye suna hua baat samajhta hai(process krta hai)
         print(f"User said: {query}\n")
 
     except Exception as e: 
@@ -78,17 +78,17 @@ def showYouTubeResults(song_name):
 def getWeather(city):
     api_key = "2a1b67d9c312d584b7b0bb2ab988d956"
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
-    complete_url = base_url + "q=" + city + "&appid=" + api_key
+    complete_url = base_url + "q=" + city + "&appid=" + api_key   #very important line (location specific)
     response = requests.get(complete_url)
     data = response.json()
     if data["cod"] != "404":
         main = data.get("main", {})
         weather = data.get("weather", [{}])[0]
-        temperature = main.get("temp", "N/A")
+        temperature = round(main.get("temp", "N/A") -273.15, 2)
         pressure = main.get("pressure", "N/A")
         humidity = main.get("humidity", "N/A")
         description = weather.get("description", "N/A")
-        weather_report = f"Temperature: {temperature}K\nPressure: {pressure}hPa\nHumidity: {humidity}%\nDescription: {description}"
+        weather_report = f"Temperature: {temperature}°C\nPressure: {pressure}hPa\nHumidity: {humidity}%\nDescription: {description}"
         return weather_report
     else:
         return "City not found."
@@ -127,6 +127,12 @@ if __name__ == "__main__":
         elif 'open google' in query:
             webbrowser.open("google.com")
 
+        elif 'open facebook' in query:
+            webbrowser.open("facebook.com")
+
+        elif 'open instagram' in query:
+            webbrowser.open("instagram.com")
+
         elif 'open stackoverflow' in query:
             webbrowser.open("stackoverflow.com")
             
@@ -136,7 +142,7 @@ if __name__ == "__main__":
             speak(f"Searching Google for {search_term}")   
 
 
-        elif 'play youtube video' in query:
+        elif ('open'or'play') and 'youtube' and 'video' in query:
             speak("Which YouTube video?")
             song_name = takeCommand().lower()
             showYouTubeResults(song_name)
@@ -146,7 +152,7 @@ if __name__ == "__main__":
             strTime = datetime.datetime.now().strftime("%H:%M:%S")    
             speak(f"Sir, the time is {strTime}")
             
-        elif 'what is the weather' in query:
+        elif 'weather' in query:
             speak('Which city?')
             city = takeCommand().lower()
             weather_report = getWeather(city)
@@ -176,9 +182,11 @@ if __name__ == "__main__":
             speak(stock_price)
             print(stock_price)  
             
-        elif "end" or "break" or "stop" in query:
+        elif any(keyword in query for keyword in ["end", "stop", "break", "terminate"]):
             print("User ended the program")
-            # break
+            speak("user terminated the program")
+            break
 
         else:
             print("No query matched")
+            # break
