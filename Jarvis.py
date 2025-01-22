@@ -101,9 +101,10 @@ if __name__ == "__main__":
         query = takeCommand().lower()
 
         if 'wikipedia' in query:
-            speak('Searching Wikipedia...')
-            query = query.replace("wikipedia", "").strip()
+            speak("what do you want to search?")
+            query = takeCommand().lower()
             print(f"Search term: {query}")  # Debugging statement
+            speak('Searching Wikipedia...')
             if query:
                 try:
                     results = wikipedia.summary(query, sentences=2)
@@ -136,12 +137,18 @@ if __name__ == "__main__":
         elif 'open stackoverflow' in query:
             webbrowser.open("stackoverflow.com")
             
-        elif 'search google for' in query:
-            search_term = query.replace("search google for", "").strip()
-            webbrowser.open(f"https://www.google.com/search?q={search_term}")
-            speak(f"Searching Google for {search_term}")   
-
-
+        elif 'search google' or 'search on google' in query:
+            if query == 'search google' or 'search on google':
+                    speak("what do you want to search?")
+                    search_term = takeCommand().lower()
+                    webbrowser.open(f"https://www.google.com/search?q={search_term}")
+                    speak(f"Searching Google for {search_term}")  
+            elif 'for' in query:
+                search_term = query.replace("search google for", "").strip()
+                webbrowser.open(f"https://www.google.com/search?q={search_term}")
+                speak(f"Searching Google for {search_term}")                    
+                    
+                     
         elif ('open'or'play') and 'youtube' and 'video' in query:
             speak("Which YouTube video?")
             song_name = takeCommand().lower()
